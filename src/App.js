@@ -3,7 +3,7 @@ import axios from "axios";
 import { Button, Input, Tree, message, Spin, Radio } from "antd";
 
 const SERVERS = {
-  "TRUNG VĂN": "http://localhost:4001",  // Đổi thành WAN-IP:PORT nếu truy cập qua mạng ngoài
+  "TRUNG VĂN": "http://101.99.6.103:4001", 
   "SÓC SƠN": "http://210.245.53.96:4001"
 };
 
