@@ -3,8 +3,8 @@ import axios from "axios";
 import { Button, Input, Tree, message, Spin, Radio } from "antd";
 
 const SERVERS = {
-  "TRUNG VĂN": "http://101.99.6.103:4001", 
-  "SÓC SƠN": "http://210.245.53.96:4001"
+  "TRUNG VĂN": "http://101.99.6.103:7000",
+  "SÓC SƠN": "http://210.245.53.96:7000"
 };
 
 function App() {
@@ -100,44 +100,17 @@ function App() {
     speedRef.current = { lastLoaded: 0, lastTime: Date.now() };
 
     try {
-      const res = await axios.post(
-        `${SERVERS[selectedSite]}/download-zip-tree`,
-        { selected: checkedKeys, rootPath },
-        {
-          responseType: "blob",
-          onDownloadProgress: (progressEvent) => {
-            setLoadedMB((progressEvent.loaded / 1024 / 1024).toFixed(2));
-            const now = Date.now();
-            const diffTime = (now - speedRef.current.lastTime) / 1000;
-            const diffLoaded = progressEvent.loaded - speedRef.current.lastLoaded;
-            if (diffTime > 0.5) {
-              const speedMBs = diffLoaded / 1024 / 1024 / diffTime;
-              setSpeed(speedMBs);
-              speedRef.current = {
-                lastLoaded: progressEvent.loaded,
-                lastTime: now
-              };
-            }
-          }
-        }
-      );
-      const url = window.URL.createObjectURL(new Blob([res.data]));
-      let fileName = "selected_files.zip";
-      const disposition = res.headers['content-disposition'];
-      if (disposition) {
-        let matches = disposition.match(/filename\*=(?:UTF-8'')?([^;]+)/);
-        if (matches && matches[1]) {
-          fileName = decodeURIComponent(matches[1]);
-        } else {
-          matches = disposition.match(/filename="?([^"]+)"?/);
-          if (matches && matches[1]) fileName = matches[1];
-        }
-      }
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = fileName;
-      a.click();
-      window.URL.revokeObjectURL(url);
+      console.log(`${SERVERS["TRUNG VĂN"]}/download-zip-treeee`);
+      
+      const res = await axios.post(`${SERVERS["TRUNG VĂN"]}/zip-and-send-lark`, {
+        selected: checkedKeys,
+        rootPath,
+      });
+
+      // ✅ Nhận được đường dẫn từ BE, ví dụ: /downloads/myFile.zip
+      const { downloadUrl } = res.data;
+      console.log(res.data);
+
       setDownloadDone(true);
     } catch (err) {
       message.error("Có lỗi khi tải file!");
@@ -233,15 +206,15 @@ function App() {
             boxShadow: "0 0 16px 2px #1677ff44"
           }}
         >
-          Đang tải...
+          Đang tải...- nếu hộp thoại này mãi không mất thì bị lỗi, không cần phải tải tiếp !
           <br />
-          <span style={{ fontSize: 52, color: "#111" }}>
+          {/* <span style={{ fontSize: 52, color: "#111" }}>
             {speed.toFixed(2)} MB/s
-          </span>
+          </span> */}
           <br />
-          <span style={{ fontSize: 30, color: "#444" }}>
+          {/* <span style={{ fontSize: 30, color: "#444" }}>
             Đã tải {loadedMB} MB
-          </span>
+          </span> */}
         </div>
       )}
 
