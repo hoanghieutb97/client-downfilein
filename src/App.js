@@ -100,9 +100,9 @@ function App() {
     speedRef.current = { lastLoaded: 0, lastTime: Date.now() };
 
     try {
-      console.log(`${SERVERS["TRUNG VĂN"]}/download-zip-treeee`);
+      console.log(`${SERVERS[[selectedSite]]}/download-zip-treeee`);
       
-      const res = await axios.post(`${SERVERS["TRUNG VĂN"]}/zip-and-send-lark`, {
+      const res = await axios.post(`${SERVERS[[selectedSite]]}/zip-and-send-lark`, {
         selected: checkedKeys,
         rootPath,
       });
